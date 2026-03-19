@@ -26,6 +26,7 @@
     background: #F8FAFF;
     color: var(--ink);
     margin: 0;
+    overflow-x: hidden;
   }
 
   h1, h2, h3, .display {
@@ -229,10 +230,126 @@
     box-shadow: 3px 3px 0 #DBEAFE;
   }
 
-  /* Responsive helpers */
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 68px;
+    position: relative;
+  }
+
+  .desktop-nav {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .burger-btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border: 2px solid #BFDBFE;
+    border-radius: 10px;
+    background: white;
+    color: var(--blue-main);
+    cursor: pointer;
+  }
+
+  .mobile-menu {
+    display: none;
+    flex-direction: column;
+    gap: 14px;
+    padding: 16px;
+    border-top: 2px solid #DBEAFE;
+    background: white;
+  }
+
+  .mobile-menu.open { display: flex; }
+
+  .mobile-menu a:not(.btn-primary) {
+    font-weight: 800;
+    color: #334155;
+    text-decoration: none;
+    padding: 10px 12px;
+    border: 2px solid #DBEAFE;
+    border-radius: 12px;
+  }
+
+  .hero-image {
+    display: block;
+    width: min(100%, 520px);
+    border-radius: 24px;
+    border: 3px solid #BFDBFE;
+    box-shadow: 6px 8px 0 #DBEAFE, 0 8px 30px rgba(37,99,235,0.14);
+    object-fit: cover;
+  }
+
+  .hero-actions,
+  .cta-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+
+  .two-col-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+
+  .footer-top {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    align-items: center;
+  }
+
+  .footer-bottom {
+    max-width: 1200px;
+    margin: 32px auto 0;
+    padding-top: 24px;
+    border-top: 1px solid #334155;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  @media (max-width: 1024px) {
+    .desktop-nav { display: none; }
+    .burger-btn { display: inline-flex; }
+    .header-inner { padding: 0 16px; height: 64px; }
+
+    .hero-section { padding: 72px 16px 56px !important; }
+    .hero-grid,
+    .two-col-grid { grid-template-columns: 1fr !important; gap: 34px !important; }
+    .hero-media { order: -1; }
+  }
+
+  /* Mobile helpers */
   @media (max-width: 768px) {
-    .hero-bg-deco { display: none; }
-    .section { padding: 64px 20px; }
+    .hero-bg-deco,
+    .hero-dash { display: none; }
+    .section { padding: 64px 16px; }
+
+    .hero-stats { grid-template-columns: 1fr !important; }
+    .hero-actions a,
+    .cta-actions a { width: 100%; text-align: center; }
+
+    .assortment-cards-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+    .footer-top { grid-template-columns: 1fr; gap: 26px; }
+    .footer-contacts { align-items: flex-start !important; }
+    .footer-bottom { flex-direction: column; align-items: flex-start; }
+  }
+
+  @media (max-width: 420px) {
+    .assortment-cards-grid { grid-template-columns: 1fr !important; }
+    .cat-tag { font-size: 0.88rem; padding: 8px 14px; }
   }
 </style>
 </head>
@@ -240,7 +357,7 @@
 
 <!-- STICKY HEADER -->
 <header id="header">
-  <div style="max-width:1200px; margin:0 auto; padding:0 24px; display:flex; align-items:center; justify-content:space-between; height:68px;">
+  <div class="header-inner">
     <div style="display:flex; align-items:center; gap:10px;">
       <svg width="38" height="38" viewBox="0 0 38 38" fill="none">
         <rect width="38" height="38" rx="10" fill="#EFF6FF"/>
@@ -253,25 +370,38 @@
         <div style="font-size:0.7rem; font-weight:600; color:#64748B; letter-spacing:0.04em;">продовольственная база</div>
       </div>
     </div>
-    <nav style="display:flex; align-items:center; gap:28px;">
-      <a href="#benefits" style="font-weight:700; color:#64748B; text-decoration:none; font-size:0.95rem; transition:color 0.2s;" onmouseover="this.style.color='#2563EB'" onmouseout="this.style.color='#64748B'">Преимущества</a>
-      <a href="#assortment" style="font-weight:700; color:#64748B; text-decoration:none; font-size:0.95rem; transition:color 0.2s;" onmouseover="this.style.color='#2563EB'" onmouseout="this.style.color='#64748B'">Ассортимент</a>
+    <nav class="desktop-nav">
+      <a href="#about" style="font-weight:700; color:#64748B; text-decoration:none; font-size:0.95rem; transition:color 0.2s;" onmouseover="this.style.color='#2563EB'" onmouseout="this.style.color='#64748B'">О нас</a>
+      <a href="#assortment" style="font-weight:700; color:#64748B; text-decoration:none; font-size:0.95rem; transition:color 0.2s;" onmouseover="this.style.color='#2563EB'" onmouseout="this.style.color='#64748B'">Каталог</a>
       <a href="#contact" class="btn-primary" style="padding:10px 22px; font-size:0.9rem;">Получить прайс</a>
     </nav>
+    <button id="burger-btn" class="burger-btn" aria-label="Открыть меню" aria-expanded="false">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path d="M3 5H17" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M3 10H17" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M3 15H17" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+    </button>
   </div>
+  <nav id="mobile-menu" class="mobile-menu">
+    <a href="#about">О нас</a>
+    <a href="#assortment">Каталог</a>
+    <a href="#contact">Контакты</a>
+    <a href="#contact" class="btn-primary" style="text-align:center;">Получить прайс</a>
+  </nav>
 </header>
 
 <!-- SECTION 1: HERO -->
-<section style="position:relative; overflow:hidden; padding:100px 24px 90px; background:white;">
+<section class="hero-section" style="position:relative; overflow:hidden; padding:100px 24px 90px; background:white;">
   <div class="hero-bg-deco"></div>
 
   <!-- Dashed decorative lines -->
-  <svg style="position:absolute;top:60px;right:8%;opacity:0.18;z-index:1;" width="180" height="180" viewBox="0 0 180 180" fill="none">
+  <svg class="hero-dash" style="position:absolute;top:60px;right:8%;opacity:0.18;z-index:1;" width="180" height="180" viewBox="0 0 180 180" fill="none">
     <path d="M10 170 Q90 10 170 90" stroke="#2563EB" stroke-width="3" stroke-dasharray="10 8" stroke-linecap="round"/>
     <path d="M10 130 Q70 10 160 50" stroke="#2563EB" stroke-width="2" stroke-dasharray="6 10" stroke-linecap="round"/>
   </svg>
 
-  <div style="max-width:1200px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center; position:relative; z-index:2;">
+  <div class="hero-grid two-col-grid" style="max-width:1200px; margin:0 auto; position:relative; z-index:2;">
     <!-- Left content -->
     <div>
       <!-- Badge -->
@@ -295,7 +425,7 @@
       </p>
 
       <!-- Stats row -->
-      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:36px;">
+      <div class="hero-stats" style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:36px;">
         <div class="stat-box">
           <span style="font-size:1.6rem; font-weight:900; color:#2563EB; font-family:'Raleway',sans-serif;">26</span>
           <span style="font-size:0.8rem; font-weight:600; color:#64748B;">лет на рынке</span>
@@ -310,18 +440,18 @@
         </div>
       </div>
 
-      <div style="display:flex; gap:14px; flex-wrap:wrap;">
+      <div class="hero-actions">
         <a href="#contact" class="btn-primary">📄 Скачать прайс</a>
         <a href="tel:+79186198689" class="btn-secondary">📞 Получить консультацию</a>
       </div>
     </div>
 
     <!-- Right: Hero image -->
-    <div style="display:flex; justify-content:center; align-items:center;">
+    <div class="hero-media" style="display:flex; justify-content:center; align-items:center;">
       <img
+        class="hero-image"
         src="hero-image.png"
         alt="Оптовые поставки продуктов в Сочи"
-        style="width:min(100%, 520px); border-radius:24px; border:3px solid #BFDBFE; box-shadow:6px 8px 0 #DBEAFE, 0 8px 30px rgba(37,99,235,0.14); object-fit:cover;"
       >
     </div>
   </div>
@@ -371,7 +501,7 @@
 </section>
 
 <!-- SECTION 3: BENEFITS -->
-<section class="section" id="benefits" style="background:white;">
+<section class="section" id="about" style="background:white;">
   <div style="max-width:1200px; margin:0 auto;">
     <div style="text-align:center; margin-bottom:56px;">
       <span style="font-size:0.85rem; font-weight:800; color:#2563EB; text-transform:uppercase; letter-spacing:0.12em;">Почему мы</span>
@@ -454,7 +584,7 @@
 
 <!-- SECTION 4: ASSORTMENT -->
 <section class="section" id="assortment" style="background:#F8FAFF;">
-  <div style="max-width:1200px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center;">
+  <div class="two-col-grid" style="max-width:1200px; margin:0 auto;">
 
     <div>
       <span style="font-size:0.85rem; font-weight:800; color:#2563EB; text-transform:uppercase; letter-spacing:0.12em;">Ассортимент</span>
@@ -485,7 +615,7 @@
     </div>
 
     <!-- Right: visual grid of product icons -->
-    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
+    <div class="assortment-cards-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
       <div class="sketch-card" style="padding:24px 16px; text-align:center; aspect-ratio:1;">
         <div style="font-size:2.5rem; margin-bottom:10px;">🥛</div>
         <div style="font-size:0.82rem; font-weight:700; color:#475569;">Молоко<br>и сливки</div>
@@ -525,7 +655,7 @@
   <div style="max-width:1200px; margin:0 auto; text-align:center; position:relative; z-index:1;">
     <h2 style="font-size:1.9rem; font-weight:900; color:white; margin:0 0 14px;">Готовы начать сотрудничество?</h2>
     <p style="color:#BFDBFE; font-size:1.05rem; font-weight:600; margin:0 0 32px;">Позвоните сейчас — подберем лучшие условия</p>
-    <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+    <div class="cta-actions" style="justify-content:center;">
       <a href="tel:+79186198689" style="background:white; color:#1E40AF; font-weight:800; padding:14px 36px; border-radius:14px; text-decoration:none; font-size:1.05rem; font-family:'Nunito',sans-serif; border:3px solid rgba(255,255,255,0.3); box-shadow:3px 3px 0 rgba(0,0,0,0.2); transition:all 0.2s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='none'">📞 +7 (918) 619-86-89</a>
       <a href="#contact" style="background:transparent; color:white; font-weight:800; padding:14px 36px; border-radius:14px; text-decoration:none; font-size:1.05rem; font-family:'Nunito',sans-serif; border:3px solid rgba(255,255,255,0.6); box-shadow:3px 3px 0 rgba(0,0,0,0.15); transition:all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.transform='translateY(-3px)'" onmouseout="this.style.background='transparent';this.style.transform='none'">✉️ Написать нам</a>
     </div>
@@ -534,7 +664,7 @@
 
 <!-- SECTION 5: FORM -->
 <section class="section" id="contact" style="background:white;">
-  <div style="max-width:1200px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:start;">
+  <div class="two-col-grid" style="max-width:1200px; margin:0 auto; align-items:start;">
 
     <!-- Left: context -->
     <div>
@@ -621,7 +751,7 @@
 
 <!-- FOOTER -->
 <footer style="background:#1E293B; padding:48px 24px; color:#94A3B8;">
-  <div style="max-width:1200px; margin:0 auto; display:grid; grid-template-columns:1fr auto; gap:40px; align-items:center; flex-wrap:wrap;">
+  <div class="footer-top">
     <div>
       <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
         <svg width="32" height="32" viewBox="0 0 38 38" fill="none">
@@ -639,7 +769,7 @@
       </p>
     </div>
 
-    <div style="display:flex; flex-direction:column; gap:12px; align-items:flex-end;">
+    <div class="footer-contacts" style="display:flex; flex-direction:column; gap:12px; align-items:flex-end;">
       <a href="tel:+79186198689" style="font-size:1.4rem; font-weight:900; color:white; text-decoration:none; font-family:'Raleway',sans-serif;">+7 (918) 619-86-89</a>
       <a href="https://t.me/sochiprodbaza" target="_blank" style="display:inline-flex; align-items:center; gap:8px; background:#2563EB; color:white; font-weight:700; padding:10px 20px; border-radius:12px; text-decoration:none; font-size:0.9rem; transition:background 0.2s;" onmouseover="this.style.background='#1E40AF'" onmouseout="this.style.background='#2563EB'">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-1.97 9.286c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.935z"/></svg>
@@ -648,7 +778,7 @@
     </div>
   </div>
 
-  <div style="max-width:1200px; margin:32px auto 0; padding-top:24px; border-top:1px solid #334155; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+  <div class="footer-bottom">
     <div style="font-size:0.82rem;">© 2024 Сочинская продовольственная база. Все права защищены.</div>
     <div style="display:flex; gap:20px; align-items:center; flex-wrap:wrap;">
       <a href="privacy.html" style="font-size:0.82rem; color:#64748B; text-decoration:underline; text-underline-offset:3px;" onmouseover="this.style.color='#93C5FD'" onmouseout="this.style.color='#64748B'">Политика конфиденциальности</a>
@@ -658,6 +788,16 @@
 </footer>
 
 <script>
+  const burgerBtn = document.getElementById('burger-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  if (burgerBtn && mobileMenu) {
+    burgerBtn.addEventListener('click', () => {
+      const isOpen = mobileMenu.classList.toggle('open');
+      burgerBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+  }
+
   // Phone mask
   const phoneInput = document.getElementById('f-phone');
   phoneInput.addEventListener('input', function(e) {
@@ -728,8 +868,19 @@
       if (target) {
         e.preventDefault();
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (mobileMenu && mobileMenu.classList.contains('open')) {
+          mobileMenu.classList.remove('open');
+          if (burgerBtn) burgerBtn.setAttribute('aria-expanded', 'false');
+        }
       }
     });
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 1024 && mobileMenu && mobileMenu.classList.contains('open')) {
+      mobileMenu.classList.remove('open');
+      if (burgerBtn) burgerBtn.setAttribute('aria-expanded', 'false');
+    }
   });
 
   // Fade-in on scroll (simple)
