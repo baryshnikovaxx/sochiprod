@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Сочинская продовольственная база — оптовые поставки</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Raleway:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue-main: #2563EB;
+    --blue-light: #EFF6FF;
+    --blue-mid: #BFDBFE;
+    --blue-dark: #1E40AF;
+    --ink: #1E293B;
+    --muted: #64748B;
+    --white: #FFFFFF;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: #F8FAFF;
+    color: var(--ink);
+    margin: 0;
+  }
+
+  h1, h2, h3, .display {
+    font-family: 'Raleway', sans-serif;
+  }
+
+  /* Hand-drawn / marker feel */
+  .marker-underline {
+    position: relative;
+    display: inline-block;
+  }
+  .marker-underline::after {
+    content: '';
+    position: absolute;
+    left: -2px;
+    right: -2px;
+    bottom: -4px;
+    height: 6px;
+    background: #93C5FD;
+    border-radius: 3px;
+    opacity: 0.7;
+    z-index: -1;
+  }
+
+  .dashed-border {
+    border: 2.5px dashed #93C5FD;
+    border-radius: 18px;
+  }
+
+  .thick-border {
+    border: 3px solid var(--blue-main);
+    border-radius: 18px;
+  }
+
+  /* Sketch card */
+  .sketch-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 4px 4px 0px #BFDBFE, 0 2px 16px rgba(37,99,235,0.07);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .sketch-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 6px 8px 0px #93C5FD, 0 4px 24px rgba(37,99,235,0.12);
+  }
+
+  /* Sticky header */
+  #header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.97);
+    backdrop-filter: blur(8px);
+    border-bottom: 2px solid #DBEAFE;
+    box-shadow: 0 2px 12px rgba(37,99,235,0.06);
+  }
+
+  .btn-primary {
+    background: var(--blue-main);
+    color: white;
+    font-weight: 800;
+    padding: 14px 32px;
+    border-radius: 14px;
+    border: 3px solid var(--blue-dark);
+    box-shadow: 3px 3px 0 var(--blue-dark);
+    transition: transform 0.15s, box-shadow 0.15s;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+    font-size: 1rem;
+    font-family: 'Nunito', sans-serif;
+  }
+  .btn-primary:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--blue-dark);
+  }
+  .btn-primary:active {
+    transform: translate(1px,1px);
+    box-shadow: 1px 1px 0 var(--blue-dark);
+  }
+
+  .btn-secondary {
+    background: white;
+    color: var(--blue-main);
+    font-weight: 800;
+    padding: 14px 32px;
+    border-radius: 14px;
+    border: 3px solid var(--blue-main);
+    box-shadow: 3px 3px 0 #93C5FD;
+    transition: transform 0.15s, box-shadow 0.15s;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+    font-size: 1rem;
+    font-family: 'Nunito', sans-serif;
+  }
+  .btn-secondary:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 #93C5FD;
+    background: var(--blue-light);
+  }
+
+  /* Section spacing */
+  .section { padding: 96px 24px; }
+
+  /* Trust logos placeholder */
+  .logo-box {
+    background: white;
+    border: 2px dashed #BFDBFE;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #93C5FD;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 18px 28px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .logo-box:hover {
+    border-color: var(--blue-main);
+    background: var(--blue-light);
+    color: var(--blue-main);
+  }
+
+  /* Category tag */
+  .cat-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    border: 2.5px solid #BFDBFE;
+    border-radius: 50px;
+    padding: 10px 22px;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--blue-dark);
+    transition: all 0.2s;
+    cursor: default;
+    box-shadow: 2px 2px 0 #DBEAFE;
+  }
+  .cat-tag:hover {
+    background: var(--blue-main);
+    color: white;
+    border-color: var(--blue-dark);
+    box-shadow: 3px 3px 0 var(--blue-dark);
+    transform: translateY(-2px);
+  }
+
+  /* Form */
+  .form-input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 2.5px solid #BFDBFE;
+    border-radius: 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    background: white;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .form-input:focus {
+    border-color: var(--blue-main);
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+  }
+  .form-input.error { border-color: #EF4444; }
+  .form-input::placeholder { color: #94A3B8; font-weight: 500; }
+
+  textarea.form-input { resize: vertical; min-height: 90px; }
+
+  /* Success message */
+  .form-success {
+    display: none;
+    text-align: center;
+    padding: 32px;
+    animation: fadeIn 0.4s ease;
+  }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
+
+  /* Hero SVG decoration */
+  .hero-bg-deco {
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 55%;
+    background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+    border-radius: 0 0 0 80px;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  /* Stat highlight */
+  .stat-box {
+    background: white;
+    border-radius: 16px;
+    border: 2.5px solid #BFDBFE;
+    padding: 16px 24px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 3px 3px 0 #DBEAFE;
+  }
+
+  /* Responsive helpers */
+  @media (max-width: 768px) {
+    .hero-bg-deco { display: none; }
+    .section { padding: 64px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- STICKY HEADER -->
+<header id="header">
+  <div style="max-width:1200px; margin:0 auto; padding:0 24px; display:flex; align-items:center; justify-content:space-between; height:68px;">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <svg width="38" height="38" viewBox="0 0 38 38" fill="none">
+        <rect width="38" height="38" rx="10" fill="#EFF6FF"/>
+        <path d="M8 26 Q14 10 19 14 Q24 18 30 10" stroke="#2563EB" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <circle cx="19" cy="22" r="6" stroke="#2563EB" stroke-width="2.5" fill="white"/>
+        <path d="M15 22 Q17 19 19 21 Q21 23 23 21" stroke="#2563EB" stroke-width="2" stroke-linecap="round" fill="none"/>
+      </svg>
+      <div>
+        <div style="font-family:'Raleway',sans-serif; font-weight:900; font-size:0.95rem; color:#1E293B; line-height:1.1;">Сочинская</div>
+        <div style="font-size:0.7rem; font-weight:600; color:#64748B; letter-spacing:0.04em;">продовольственная база</div>
+      </div>
+    </div>
+    <nav style="display:flex; align-items:center; gap:28px;">
+      <a href="#benefits" style="font-weight:700; color:#64748B; text-decoration:none; font-size:0.95rem; transition:color 0.2s;" onmouseover="this.style.color='#2563EB'" onmouseout="this.style.color='#64748B'">Преимущества</a>
+      <a href="#assortment" style="font-weight:700; color:#64748B; text-decoration:none; font-size:0.95rem; transition:color 0.2s;" onmouseover="this.style.color='#2563EB'" onmouseout="this.style.color='#64748B'">Ассортимент</a>
+      <a href="#contact" class="btn-primary" style="padding:10px 22px; font-size:0.9rem;">Получить прайс</a>
+    </nav>
+  </div>
+</header>
+
+<!-- SECTION 1: HERO -->
+<section style="position:relative; overflow:hidden; padding:100px 24px 90px; background:white;">
+  <div class="hero-bg-deco"></div>
+
+  <!-- Dashed decorative lines -->
+  <svg style="position:absolute;top:60px;right:8%;opacity:0.18;z-index:1;" width="180" height="180" viewBox="0 0 180 180" fill="none">
+    <path d="M10 170 Q90 10 170 90" stroke="#2563EB" stroke-width="3" stroke-dasharray="10 8" stroke-linecap="round"/>
+    <path d="M10 130 Q70 10 160 50" stroke="#2563EB" stroke-width="2" stroke-dasharray="6 10" stroke-linecap="round"/>
+  </svg>
+
+  <div style="max-width:1200px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center; position:relative; z-index:2;">
+    <!-- Left content -->
+    <div>
+      <!-- Badge -->
+      <div style="display:inline-flex; align-items:center; gap:8px; background:#EFF6FF; border:2px solid #BFDBFE; border-radius:50px; padding:6px 16px; margin-bottom:28px;">
+        <span style="width:8px;height:8px;background:#2563EB;border-radius:50%;display:inline-block;"></span>
+        <span style="font-weight:700; font-size:0.85rem; color:#2563EB;">Работаем с 1998 года · Сочи и регион</span>
+      </div>
+
+      <h1 style="font-size:clamp(1.8rem, 3.5vw, 2.8rem); font-weight:900; line-height:1.15; color:#1E293B; margin:0 0 20px;">
+        Оптовые поставки<br>
+        <span class="marker-underline" style="color:#2563EB;">молочной продукции</span><br>
+        и бакалеи в Сочи
+      </h1>
+
+      <p style="font-size:1.05rem; font-weight:600; color:#64748B; margin:0 0 16px; line-height:1.5;">
+        Для ресторанов, кофеен, отелей, магазинов и продуктовых баз
+      </p>
+
+      <p style="font-size:0.98rem; color:#475569; line-height:1.7; margin:0 0 36px;">
+        Стабильные поставки, полный пакет документов и цены ниже рынка за счёт объёма.<br>Более <strong style="color:#1E40AF;">400 постоянных клиентов</strong> доверяют нам уже 26 лет.
+      </p>
+
+      <!-- Stats row -->
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:36px;">
+        <div class="stat-box">
+          <span style="font-size:1.6rem; font-weight:900; color:#2563EB; font-family:'Raleway',sans-serif;">26</span>
+          <span style="font-size:0.8rem; font-weight:600; color:#64748B;">лет на рынке</span>
+        </div>
+        <div class="stat-box">
+          <span style="font-size:1.6rem; font-weight:900; color:#2563EB; font-family:'Raleway',sans-serif;">400+</span>
+          <span style="font-size:0.8rem; font-weight:600; color:#64748B;">клиентов</span>
+        </div>
+        <div class="stat-box">
+          <span style="font-size:1.6rem; font-weight:900; color:#2563EB; font-family:'Raleway',sans-serif;">5 мин</span>
+          <span style="font-size:0.8rem; font-weight:600; color:#64748B;">ответ менеджера</span>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:14px; flex-wrap:wrap;">
+        <a href="#contact" class="btn-primary">📄 Скачать прайс</a>
+        <a href="tel:+79186198689" class="btn-secondary">📞 Получить консультацию</a>
+      </div>
+    </div>
+
+    <!-- Right: Illustration -->
+    <div style="display:flex; justify-content:center; align-items:center;">
+      <svg width="420" height="380" viewBox="0 0 420 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+        <!-- Background circle -->
+        <circle cx="210" cy="190" r="170" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="2" stroke-dasharray="12 8"/>
+
+        <!-- === COW === -->
+        <!-- Body -->
+        <ellipse cx="175" cy="220" rx="65" ry="42" fill="white" stroke="#1E40AF" stroke-width="3" stroke-linecap="round"/>
+        <!-- Head -->
+        <ellipse cx="226" cy="200" rx="32" ry="26" fill="white" stroke="#1E40AF" stroke-width="3"/>
+        <!-- Ear left -->
+        <ellipse cx="213" cy="177" rx="8" ry="5" fill="#BFDBFE" stroke="#1E40AF" stroke-width="2.5" transform="rotate(-20 213 177)"/>
+        <!-- Ear right -->
+        <ellipse cx="246" cy="179" rx="8" ry="5" fill="#BFDBFE" stroke="#1E40AF" stroke-width="2.5" transform="rotate(20 246 179)"/>
+        <!-- Eye -->
+        <circle cx="232" cy="197" r="4" fill="#1E40AF"/>
+        <circle cx="233" cy="196" r="1.5" fill="white"/>
+        <!-- Nose -->
+        <ellipse cx="243" cy="210" rx="9" ry="6" fill="#EFF6FF" stroke="#1E40AF" stroke-width="2"/>
+        <circle cx="240" cy="211" r="2" fill="#1E40AF"/>
+        <circle cx="246" cy="211" r="2" fill="#1E40AF"/>
+        <!-- Horns -->
+        <path d="M218 179 Q214 166 220 160" stroke="#1E40AF" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M244 176 Q248 163 254 159" stroke="#1E40AF" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- Legs -->
+        <rect x="142" y="255" width="13" height="36" rx="6" fill="white" stroke="#1E40AF" stroke-width="2.5"/>
+        <rect x="162" y="255" width="13" height="36" rx="6" fill="white" stroke="#1E40AF" stroke-width="2.5"/>
+        <rect x="182" y="255" width="13" height="36" rx="6" fill="white" stroke="#1E40AF" stroke-width="2.5"/>
+        <rect x="202" y="255" width="13" height="36" rx="6" fill="white" stroke="#1E40AF" stroke-width="2.5"/>
+        <!-- Tail -->
+        <path d="M113 220 Q98 212 100 228 Q102 242 112 240" stroke="#1E40AF" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        <!-- Cow spots -->
+        <ellipse cx="165" cy="215" rx="16" ry="11" fill="#DBEAFE" stroke="none" opacity="0.8"/>
+        <ellipse cx="190" cy="230" rx="10" ry="7" fill="#DBEAFE" stroke="none" opacity="0.8"/>
+
+        <!-- === MILK BOTTLE === -->
+        <rect x="285" y="175" width="38" height="62" rx="8" fill="white" stroke="#1E40AF" stroke-width="2.5"/>
+        <!-- Bottle cap -->
+        <rect x="291" y="162" width="26" height="16" rx="7" fill="#BFDBFE" stroke="#1E40AF" stroke-width="2.5"/>
+        <!-- Milk fill -->
+        <rect x="288" y="205" width="32" height="30" rx="4" fill="#EFF6FF"/>
+        <!-- Bottle label -->
+        <rect x="290" y="187" width="28" height="16" rx="4" fill="#DBEAFE" stroke="none"/>
+        <text x="304" y="198" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="800" fill="#1E40AF">МОЛОКО</text>
+
+        <!-- === BOXES (stacked) === -->
+        <!-- Box 3 (bottom) -->
+        <rect x="50" y="268" width="72" height="46" rx="8" fill="white" stroke="#1E40AF" stroke-width="2.5"/>
+        <line x1="86" y1="268" x2="86" y2="314" stroke="#BFDBFE" stroke-width="2" stroke-dasharray="5 4"/>
+        <line x1="50" y1="291" x2="122" y2="291" stroke="#BFDBFE" stroke-width="2" stroke-dasharray="5 4"/>
+        <text x="86" y="285" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="700" fill="#64748B">▤</text>
+
+        <!-- Box 2 (middle) -->
+        <rect x="58" y="228" width="66" height="42" rx="8" fill="white" stroke="#2563EB" stroke-width="2.5"/>
+        <line x1="91" y1="228" x2="91" y2="270" stroke="#BFDBFE" stroke-width="2" stroke-dasharray="5 4"/>
+        <line x1="58" y1="249" x2="124" y2="249" stroke="#BFDBFE" stroke-width="2" stroke-dasharray="5 4"/>
+
+        <!-- Box 1 (top) -->
+        <rect x="66" y="192" width="58" height="38" rx="8" fill="#EFF6FF" stroke="#2563EB" stroke-width="2.5"/>
+        <text x="95" y="215" text-anchor="middle" font-family="Nunito,sans-serif" font-size="18" fill="#2563EB">📦</text>
+
+        <!-- === DELIVERY TRUCK (small, bottom right) === -->
+        <!-- Truck body -->
+        <rect x="285" y="280" width="90" height="52" rx="8" fill="white" stroke="#1E40AF" stroke-width="2.5"/>
+        <!-- Cab -->
+        <path d="M353 280 L375 280 Q385 280 385 292 L385 332 L353 332 Z" fill="#EFF6FF" stroke="#1E40AF" stroke-width="2.5"/>
+        <!-- Windshield -->
+        <rect x="358" y="285" width="20" height="18" rx="4" fill="#BFDBFE" stroke="#1E40AF" stroke-width="1.5"/>
+        <!-- Wheels -->
+        <circle cx="308" cy="336" r="12" fill="white" stroke="#1E40AF" stroke-width="2.5"/>
+        <circle cx="308" cy="336" r="5" fill="#DBEAFE" stroke="#1E40AF" stroke-width="1.5"/>
+        <circle cx="368" cy="336" r="12" fill="white" stroke="#1E40AF" stroke-width="2.5"/>
+        <circle cx="368" cy="336" r="5" fill="#DBEAFE" stroke="#1E40AF" stroke-width="1.5"/>
+        <!-- Cargo lines on truck -->
+        <line x1="295" y1="298" x2="348" y2="298" stroke="#BFDBFE" stroke-width="2" stroke-dasharray="5 4"/>
+        <line x1="295" y1="310" x2="348" y2="310" stroke="#BFDBFE" stroke-width="2" stroke-dasharray="5 4"/>
+        <line x1="295" y1="322" x2="348" y2="322" stroke="#BFDBFE" stroke-width="2" stroke-dasharray="5 4"/>
+
+        <!-- Dashed lines decorative -->
+        <path d="M20 150 Q60 80 120 110" stroke="#93C5FD" stroke-width="2" stroke-dasharray="6 6" stroke-linecap="round" opacity="0.5"/>
+        <path d="M330 140 Q370 100 400 130" stroke="#93C5FD" stroke-width="2" stroke-dasharray="6 6" stroke-linecap="round" opacity="0.5"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- Divider wave -->
+<div style="background:white; line-height:0;">
+  <svg viewBox="0 0 1440 40" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style="display:block;width:100%;height:40px;">
+    <path d="M0,20 Q360,40 720,20 Q1080,0 1440,20 L1440,40 L0,40 Z" fill="#F8FAFF"/>
+  </svg>
+</div>
+
+<!-- SECTION 2: TRUST -->
+<section class="section" id="trust" style="background:#F8FAFF;">
+  <div style="max-width:1200px; margin:0 auto;">
+    <div style="text-align:center; margin-bottom:52px;">
+      <span style="font-size:0.85rem; font-weight:800; color:#2563EB; text-transform:uppercase; letter-spacing:0.12em;">Наши клиенты</span>
+      <h2 style="font-size:2.2rem; font-weight:900; color:#1E293B; margin:10px 0 0;">Нам доверяют</h2>
+      <div style="width:60px; height:4px; background:linear-gradient(90deg,#2563EB,#93C5FD); border-radius:4px; margin:14px auto 0;"></div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:16px; align-items:center;">
+      <div class="logo-box">🏨 Отель «Рэдиссон»</div>
+      <div class="logo-box">☕ Кофейная сеть</div>
+      <div class="logo-box">🍽️ Ресторан «Бриз»</div>
+      <div class="logo-box">🛒 Супермаркет</div>
+      <div class="logo-box">🏪 Продмаг сети</div>
+      <div class="logo-box">🍕 Пиццерия «Соло»</div>
+    </div>
+
+    <!-- Social proof bar -->
+    <div style="margin-top:48px; background:white; border:2.5px solid #BFDBFE; border-radius:20px; padding:28px 36px; display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:24px; text-align:center; box-shadow:4px 4px 0 #DBEAFE;">
+      <div>
+        <div style="font-size:2rem; font-weight:900; color:#2563EB; font-family:'Raleway',sans-serif;">98%</div>
+        <div style="font-size:0.9rem; font-weight:600; color:#64748B; margin-top:4px;">клиентов продлевают контракт</div>
+      </div>
+      <div style="border-left:2px dashed #BFDBFE; border-right:2px dashed #BFDBFE; padding:0 24px;">
+        <div style="font-size:2rem; font-weight:900; color:#2563EB; font-family:'Raleway',sans-serif;">24ч</div>
+        <div style="font-size:0.9rem; font-weight:600; color:#64748B; margin-top:4px;">срок доставки по Сочи</div>
+      </div>
+      <div>
+        <div style="font-size:2rem; font-weight:900; color:#2563EB; font-family:'Raleway',sans-serif;">1000+</div>
+        <div style="font-size:0.9rem; font-weight:600; color:#64748B; margin-top:4px;">позиций в ассортименте</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: BENEFITS -->
+<section class="section" id="benefits" style="background:white;">
+  <div style="max-width:1200px; margin:0 auto;">
+    <div style="text-align:center; margin-bottom:56px;">
+      <span style="font-size:0.85rem; font-weight:800; color:#2563EB; text-transform:uppercase; letter-spacing:0.12em;">Почему мы</span>
+      <h2 style="font-size:2.2rem; font-weight:900; color:#1E293B; margin:10px 0 0;">Работаем так, как удобно бизнесу</h2>
+      <div style="width:60px; height:4px; background:linear-gradient(90deg,#2563EB,#93C5FD); border-radius:4px; margin:14px auto 0;"></div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:24px;">
+
+      <!-- Card 1: Documents -->
+      <div class="sketch-card" style="padding:32px 28px;">
+        <div style="width:56px; height:56px; background:#EFF6FF; border:2.5px solid #BFDBFE; border-radius:16px; display:flex; align-items:center; justify-content:center; margin-bottom:20px;">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <rect x="5" y="3" width="18" height="22" rx="3" stroke="#2563EB" stroke-width="2.5"/>
+            <path d="M9 10 H19" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>
+            <path d="M9 14 H19" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>
+            <path d="M9 18 H15" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3 style="font-size:1.15rem; font-weight:800; color:#1E293B; margin:0 0 10px;">Полный пакет документов</h3>
+        <p style="font-size:0.93rem; color:#64748B; line-height:1.65; margin:0;">
+          Сертификаты качества, декларации соответствия и накладные — всё оформляем автоматически. Никаких проблем с проверками.
+        </p>
+      </div>
+
+      <!-- Card 2: Price -->
+      <div class="sketch-card" style="padding:32px 28px;">
+        <div style="width:56px; height:56px; background:#EFF6FF; border:2.5px solid #BFDBFE; border-radius:16px; display:flex; align-items:center; justify-content:center; margin-bottom:20px;">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <circle cx="14" cy="14" r="10" stroke="#2563EB" stroke-width="2.5"/>
+            <path d="M14 8 V20" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>
+            <path d="M10 11 Q10 8 14 8 Q18 8 18 11 Q18 14 14 14 Q18 14 18 17 Q18 20 14 20 Q10 20 10 17" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3 style="font-size:1.15rem; font-weight:800; color:#1E293B; margin:0 0 10px;">Цены ниже рынка</h3>
+        <p style="font-size:0.93rem; color:#64748B; line-height:1.65; margin:0;">
+          Работаем напрямую с производителями. Чем больше объём — тем ниже цена. Индивидуальные условия для постоянных партнёров.
+        </p>
+      </div>
+
+      <!-- Card 3: Delivery -->
+      <div class="sketch-card" style="padding:32px 28px;">
+        <div style="width:56px; height:56px; background:#EFF6FF; border:2.5px solid #BFDBFE; border-radius:16px; display:flex; align-items:center; justify-content:center; margin-bottom:20px;">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <rect x="3" y="12" width="16" height="10" rx="3" stroke="#2563EB" stroke-width="2.5"/>
+            <path d="M19 16 L19 22 L25 22 L25 18 L22 12 L19 12" stroke="#2563EB" stroke-width="2.5" stroke-linejoin="round"/>
+            <circle cx="8" cy="23" r="2.5" stroke="#2563EB" stroke-width="2"/>
+            <circle cx="22" cy="23" r="2.5" stroke="#2563EB" stroke-width="2"/>
+            <path d="M5 12 Q6 7 11 7" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-dasharray="3 3"/>
+          </svg>
+        </div>
+        <h3 style="font-size:1.15rem; font-weight:800; color:#1E293B; margin:0 0 10px;">Доставка в день заказа</h3>
+        <p style="font-size:0.93rem; color:#64748B; line-height:1.65; margin:0;">
+          Принимаем заказы до 15:00 — привозим в тот же день. Точное время доставки согласовываем с вами заранее.
+        </p>
+      </div>
+
+      <!-- Card 4: Transport -->
+      <div class="sketch-card" style="padding:32px 28px;">
+        <div style="width:56px; height:56px; background:#EFF6FF; border:2.5px solid #BFDBFE; border-radius:16px; display:flex; align-items:center; justify-content:center; margin-bottom:20px;">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <path d="M4 9 L4 19 L24 19" stroke="#2563EB" stroke-width="2.5" stroke-linecap="round"/>
+            <rect x="4" y="9" width="14" height="10" rx="2" stroke="#2563EB" stroke-width="2.5"/>
+            <path d="M18 13 L18 19 L24 19 L24 14 L21 9 L18 9" stroke="#2563EB" stroke-width="2.5" stroke-linejoin="round"/>
+            <circle cx="9" cy="20.5" r="2.5" stroke="#2563EB" stroke-width="2"/>
+            <circle cx="21" cy="20.5" r="2.5" stroke="#2563EB" stroke-width="2"/>
+            <path d="M7 9 L7 4 L12 4" stroke="#2563EB" stroke-width="1.8" stroke-dasharray="3 3" stroke-linecap="round"/>
+            <circle cx="12" cy="4" r="2" fill="#BFDBFE" stroke="#2563EB" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <h3 style="font-size:1.15rem; font-weight:800; color:#1E293B; margin:0 0 10px;">Собственный транспорт</h3>
+        <p style="font-size:0.93rem; color:#64748B; line-height:1.65; margin:0;">
+          Флот холодильных фургонов — без перекупщиков и третьих лиц. Товар доезжает в идеальном состоянии, сохраняя температурный режим.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4: ASSORTMENT -->
+<section class="section" id="assortment" style="background:#F8FAFF;">
+  <div style="max-width:1200px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center;">
+
+    <div>
+      <span style="font-size:0.85rem; font-weight:800; color:#2563EB; text-transform:uppercase; letter-spacing:0.12em;">Ассортимент</span>
+      <h2 style="font-size:2.2rem; font-weight:900; color:#1E293B; margin:10px 0 20px;">Всё в одном месте</h2>
+      <p style="font-size:1rem; color:#64748B; line-height:1.75; margin:0 0 36px;">
+        Не нужно работать с пятью разными поставщиками. У нас вы найдёте всё необходимое для вашего бизнеса — от молока до специй. Единый счёт, единая логистика, один менеджер.
+      </p>
+
+      <!-- Category tags -->
+      <div style="display:flex; flex-wrap:wrap; gap:12px;">
+        <span class="cat-tag">🥛 Молочная продукция</span>
+        <span class="cat-tag">🌾 Бакалея</span>
+        <span class="cat-tag">🥤 Напитки</span>
+        <span class="cat-tag">🫙 Соусы и приправы</span>
+        <span class="cat-tag">🥫 Консервы</span>
+        <span class="cat-tag">🧀 Сыры</span>
+        <span class="cat-tag">🥚 Яйца</span>
+        <span class="cat-tag">🧈 Масло и жиры</span>
+      </div>
+
+      <div style="margin-top:32px; padding:20px 24px; background:white; border:2.5px dashed #93C5FD; border-radius:16px; display:flex; align-items:center; gap:14px;">
+        <span style="font-size:2rem;">📋</span>
+        <div>
+          <div style="font-weight:800; color:#1E293B; margin-bottom:4px;">Полный каталог — более 1000 позиций</div>
+          <div style="font-size:0.9rem; color:#64748B;">Запросите прайс-лист — пришлём в WhatsApp или на email</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: visual grid of product icons -->
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
+      <div class="sketch-card" style="padding:24px 16px; text-align:center; aspect-ratio:1;">
+        <div style="font-size:2.5rem; margin-bottom:10px;">🥛</div>
+        <div style="font-size:0.82rem; font-weight:700; color:#475569;">Молоко<br>и сливки</div>
+      </div>
+      <div class="sketch-card" style="padding:24px 16px; text-align:center; aspect-ratio:1;">
+        <div style="font-size:2.5rem; margin-bottom:10px;">🧀</div>
+        <div style="font-size:0.82rem; font-weight:700; color:#475569;">Сыры<br>и творог</div>
+      </div>
+      <div class="sketch-card" style="padding:24px 16px; text-align:center; aspect-ratio:1;">
+        <div style="font-size:2.5rem; margin-bottom:10px;">🌾</div>
+        <div style="font-size:0.82rem; font-weight:700; color:#475569;">Крупы<br>и мука</div>
+      </div>
+      <div class="sketch-card" style="padding:24px 16px; text-align:center; aspect-ratio:1;">
+        <div style="font-size:2.5rem; margin-bottom:10px;">🥤</div>
+        <div style="font-size:0.82rem; font-weight:700; color:#475569;">Напитки<br>и соки</div>
+      </div>
+      <div class="sketch-card" style="padding:24px 16px; text-align:center; aspect-ratio:1; background:linear-gradient(135deg,#EFF6FF,#DBEAFE); border:2.5px solid #2563EB;">
+        <div style="font-size:2.5rem; margin-bottom:10px;">📦</div>
+        <div style="font-size:0.82rem; font-weight:800; color:#1E40AF;">1000+<br>позиций</div>
+      </div>
+      <div class="sketch-card" style="padding:24px 16px; text-align:center; aspect-ratio:1;">
+        <div style="font-size:2.5rem; margin-bottom:10px;">🫙</div>
+        <div style="font-size:0.82rem; font-weight:700; color:#475569;">Соусы<br>и консервы</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA STRIP -->
+<section style="background:linear-gradient(135deg, #1E40AF 0%, #2563EB 50%, #3B82F6 100%); padding:60px 24px; position:relative; overflow:hidden;">
+  <!-- Dashed line decoration -->
+  <svg style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.1;" viewBox="0 0 1200 120" preserveAspectRatio="none">
+    <path d="M0 60 Q300 20 600 60 Q900 100 1200 60" stroke="white" stroke-width="3" stroke-dasharray="15 10" fill="none"/>
+    <path d="M0 80 Q400 40 800 80 Q1000 100 1200 80" stroke="white" stroke-width="2" stroke-dasharray="8 12" fill="none"/>
+  </svg>
+
+  <div style="max-width:1200px; margin:0 auto; text-align:center; position:relative; z-index:1;">
+    <h2 style="font-size:1.9rem; font-weight:900; color:white; margin:0 0 14px;">Готовы начать сотрудничество?</h2>
+    <p style="color:#BFDBFE; font-size:1.05rem; font-weight:600; margin:0 0 32px;">Позвоните сейчас — подберем лучшие условия</p>
+    <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+      <a href="tel:+79186198689" style="background:white; color:#1E40AF; font-weight:800; padding:14px 36px; border-radius:14px; text-decoration:none; font-size:1.05rem; font-family:'Nunito',sans-serif; border:3px solid rgba(255,255,255,0.3); box-shadow:3px 3px 0 rgba(0,0,0,0.2); transition:all 0.2s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='none'">📞 +7 (918) 619-86-89</a>
+      <a href="#contact" style="background:transparent; color:white; font-weight:800; padding:14px 36px; border-radius:14px; text-decoration:none; font-size:1.05rem; font-family:'Nunito',sans-serif; border:3px solid rgba(255,255,255,0.6); box-shadow:3px 3px 0 rgba(0,0,0,0.15); transition:all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.transform='translateY(-3px)'" onmouseout="this.style.background='transparent';this.style.transform='none'">✉️ Написать нам</a>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 5: FORM -->
+<section class="section" id="contact" style="background:white;">
+  <div style="max-width:1200px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:start;">
+
+    <!-- Left: context -->
+    <div>
+      <span style="font-size:0.85rem; font-weight:800; color:#2563EB; text-transform:uppercase; letter-spacing:0.12em;">Контакт</span>
+      <h2 style="font-size:2.1rem; font-weight:900; color:#1E293B; margin:10px 0 16px;">Получите прайс и условия поставки</h2>
+
+      <div style="display:inline-flex; align-items:center; gap:10px; background:#EFF6FF; border:2px solid #BFDBFE; border-radius:12px; padding:10px 18px; margin-bottom:32px;">
+        <span style="font-size:1.3rem;">⚡</span>
+        <span style="font-weight:700; color:#1E40AF;">Перезвоним в течение 5 минут</span>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:20px; margin-bottom:40px;">
+        <div style="display:flex; align-items:flex-start; gap:16px;">
+          <div style="width:42px; height:42px; background:#EFF6FF; border:2px solid #BFDBFE; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1.2rem;">1</div>
+          <div>
+            <div style="font-weight:800; color:#1E293B; margin-bottom:4px;">Оставьте заявку</div>
+            <div style="font-size:0.9rem; color:#64748B; line-height:1.6;">Заполните форму — это займёт меньше минуты</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:flex-start; gap:16px;">
+          <div style="width:42px; height:42px; background:#EFF6FF; border:2px solid #BFDBFE; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1.2rem;">2</div>
+          <div>
+            <div style="font-weight:800; color:#1E293B; margin-bottom:4px;">Менеджер позвонит</div>
+            <div style="font-size:0.9rem; color:#64748B; line-height:1.6;">Обсудим ваши нужды, объёмы и условия</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:flex-start; gap:16px;">
+          <div style="width:42px; height:42px; background:#EFF6FF; border:2px solid #BFDBFE; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1.2rem;">3</div>
+          <div>
+            <div style="font-weight:800; color:#1E293B; margin-bottom:4px;">Получите прайс-лист</div>
+            <div style="font-size:0.9rem; color:#64748B; line-height:1.6;">С актуальными ценами и персональными скидками</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phone block -->
+      <div class="dashed-border" style="padding:24px 28px;">
+        <div style="font-size:0.85rem; font-weight:700; color:#64748B; margin-bottom:8px;">Предпочитаете звонить?</div>
+        <a href="tel:+79180074717" style="font-size:1.5rem; font-weight:900; color:#1E40AF; text-decoration:none; font-family:'Raleway',sans-serif; display:block; margin-bottom:6px;">8 (918) 007-47-17</a>
+        <div style="font-size:0.85rem; color:#94A3B8;">Пн–Пт 8:00–18:00, Сб 9:00–15:00</div>
+      </div>
+    </div>
+
+    <!-- Right: Form -->
+    <div style="background:#F8FAFF; border:2.5px solid #BFDBFE; border-radius:24px; padding:40px 36px; box-shadow:6px 6px 0 #DBEAFE;">
+      <div id="form-container">
+        <div style="margin-bottom:28px;">
+          <label style="display:block; font-weight:700; color:#1E293B; margin-bottom:8px; font-size:0.95rem;">Ваше имя <span style="color:#2563EB;">*</span></label>
+          <input type="text" id="f-name" class="form-input" placeholder="Иван Иванов">
+          <div id="err-name" style="color:#EF4444; font-size:0.82rem; font-weight:600; margin-top:4px; display:none;">Введите имя</div>
+        </div>
+
+        <div style="margin-bottom:28px;">
+          <label style="display:block; font-weight:700; color:#1E293B; margin-bottom:8px; font-size:0.95rem;">Телефон <span style="color:#2563EB;">*</span></label>
+          <input type="tel" id="f-phone" class="form-input" placeholder="+7 (918) 000-00-00">
+          <div id="err-phone" style="color:#EF4444; font-size:0.82rem; font-weight:600; margin-top:4px; display:none;">Введите корректный телефон</div>
+        </div>
+
+        <div style="margin-bottom:32px;">
+          <label style="display:block; font-weight:700; color:#1E293B; margin-bottom:8px; font-size:0.95rem;">Комментарий</label>
+          <textarea id="f-comment" class="form-input" placeholder="Что вам нужно? Объём, категории товаров, частота поставок..."></textarea>
+        </div>
+
+        <button onclick="submitForm()" class="btn-primary" style="width:100%; text-align:center; font-size:1.05rem; padding:16px;">
+          📄 Получить прайс
+        </button>
+
+        <div style="text-align:center; margin-top:14px; font-size:0.8rem; color:#94A3B8; font-weight:600;">
+          Нажимая кнопку, вы соглашаетесь на обработку персональных данных
+        </div>
+      </div>
+
+      <!-- Success -->
+      <div class="form-success" id="form-success">
+        <div style="font-size:3rem; margin-bottom:16px;">✅</div>
+        <h3 style="font-size:1.4rem; font-weight:900; color:#1E293B; margin:0 0 10px;">Заявка принята!</h3>
+        <p style="color:#64748B; font-weight:600; line-height:1.6; margin:0;">
+          Наш менеджер свяжется с вами в течение 5 минут.<br>Ожидайте звонка!
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer style="background:#1E293B; padding:48px 24px; color:#94A3B8;">
+  <div style="max-width:1200px; margin:0 auto; display:grid; grid-template-columns:1fr auto; gap:40px; align-items:center; flex-wrap:wrap;">
+    <div>
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+        <svg width="32" height="32" viewBox="0 0 38 38" fill="none">
+          <rect width="38" height="38" rx="10" fill="#1E40AF"/>
+          <path d="M8 26 Q14 10 19 14 Q24 18 30 10" stroke="#93C5FD" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <circle cx="19" cy="22" r="6" stroke="#93C5FD" stroke-width="2.5" fill="none"/>
+        </svg>
+        <div>
+          <div style="font-family:'Raleway',sans-serif; font-weight:900; font-size:1rem; color:white;">Сочинская продовольственная база</div>
+          <div style="font-size:0.75rem; color:#64748B;">Оптовые поставки с 1998 года</div>
+        </div>
+      </div>
+      <p style="font-size:0.9rem; line-height:1.7; max-width:400px; margin:0;">
+        Надёжный партнёр для ресторанов, кофеен, отелей и магазинов Краснодарского края
+      </p>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:12px; align-items:flex-end;">
+      <a href="tel:+79186198689" style="font-size:1.4rem; font-weight:900; color:white; text-decoration:none; font-family:'Raleway',sans-serif;">+7 (918) 619-86-89</a>
+      <a href="https://t.me/sochiprodbaza" target="_blank" style="display:inline-flex; align-items:center; gap:8px; background:#2563EB; color:white; font-weight:700; padding:10px 20px; border-radius:12px; text-decoration:none; font-size:0.9rem; transition:background 0.2s;" onmouseover="this.style.background='#1E40AF'" onmouseout="this.style.background='#2563EB'">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-1.97 9.286c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.935z"/></svg>
+        Написать в Telegram
+      </a>
+    </div>
+  </div>
+
+  <div style="max-width:1200px; margin:32px auto 0; padding-top:24px; border-top:1px solid #334155; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+    <div style="font-size:0.82rem;">© 2024 Сочинская продовольственная база. Все права защищены.</div>
+    <div style="display:flex; gap:20px; align-items:center; flex-wrap:wrap;">
+      <a href="privacy.html" style="font-size:0.82rem; color:#64748B; text-decoration:underline; text-underline-offset:3px;" onmouseover="this.style.color='#93C5FD'" onmouseout="this.style.color='#64748B'">Политика конфиденциальности</a>
+      <div style="font-size:0.82rem; color:#475569;">Сочи, Краснодарский край</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Phone mask
+  const phoneInput = document.getElementById('f-phone');
+  phoneInput.addEventListener('input', function(e) {
+    let val = e.target.value.replace(/\D/g, '');
+    if (val.startsWith('8')) val = '7' + val.slice(1);
+    if (val.startsWith('7')) {
+      val = val.slice(0,11);
+      let formatted = '+7';
+      if (val.length > 1) formatted += ' (' + val.slice(1,4);
+      if (val.length >= 4) formatted += ') ' + val.slice(4,7);
+      if (val.length >= 7) formatted += '-' + val.slice(7,9);
+      if (val.length >= 9) formatted += '-' + val.slice(9,11);
+      e.target.value = formatted;
+    } else if (val.length > 0) {
+      e.target.value = '+' + val;
+    }
+  });
+
+  function validatePhone(v) {
+    return v.replace(/\D/g,'').length >= 11;
+  }
+
+  function submitForm() {
+    let valid = true;
+
+    const name = document.getElementById('f-name');
+    const phone = document.getElementById('f-phone');
+    const errName = document.getElementById('err-name');
+    const errPhone = document.getElementById('err-phone');
+
+    // Reset
+    name.classList.remove('error');
+    phone.classList.remove('error');
+    errName.style.display = 'none';
+    errPhone.style.display = 'none';
+
+    if (!name.value.trim() || name.value.trim().length < 2) {
+      name.classList.add('error');
+      errName.style.display = 'block';
+      valid = false;
+    }
+
+    if (!validatePhone(phone.value)) {
+      phone.classList.add('error');
+      errPhone.style.display = 'block';
+      valid = false;
+    }
+
+    if (!valid) return;
+
+    // Success
+    document.getElementById('form-container').style.display = 'none';
+    const s = document.getElementById('form-success');
+    s.style.display = 'block';
+
+    // In real use, you'd POST to your backend here
+    console.log('Form submitted:', {
+      name: name.value,
+      phone: phone.value,
+      comment: document.getElementById('f-comment').value
+    });
+  }
+
+  // Smooth active nav
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  // Fade-in on scroll (simple)
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.sketch-card').forEach(card => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(20px)';
+    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease, box-shadow 0.2s, transform 0.2s';
+    observer.observe(card);
+  });
+</script>
+</body>
+</html>
